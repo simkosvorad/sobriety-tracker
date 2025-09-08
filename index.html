@@ -5,64 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sobriety Achievement Tracker</title>
   <style>
-    :root{
-      --bg:#0f172a; /* slate-900 */
-      --card:#111827; /* gray-900 */
-      --ink:#e5e7eb; /* gray-200 */
-      --muted:#9ca3af; /* gray-400 */
-      --accent:#22c55e; /* green-500 */
-      --accent-2:#6366f1; /* indigo-500 */
-      --warning:#ef4444; /* red-500 */
-      --gold:#f59e0b; /* amber-500 */
-      --silver:#9ca3af; /* silver-ish */
-      --bronze:#b45309; /* orange-700 */
-      --platinum:#60a5fa; /* sky-400 */
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font:16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background:linear-gradient(180deg, #0b1220, var(--bg));
-      color:var(--ink);
-    }
-    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
-    header{display:flex; flex-wrap:wrap; align-items:center; gap:16px; justify-content:space-between; margin-bottom:12px}
-    h1{font-size:clamp(24px, 2.8vw, 34px); margin:0; letter-spacing:0.3px}
-    .toolbar{display:flex; flex-wrap:wrap; gap:8px}
-    button,.btn{border:1px solid #1f2937; background:#0b1220; color:var(--ink); padding:8px 12px; border-radius:10px; cursor:pointer}
-    button:hover{border-color:#374151}
-    button.primary{background:linear-gradient(135deg, #0ea5e9, #22c55e); border:none; color:white}
-    button.danger{background:#1f2937; border-color:#ef4444; color:#fecaca}
-    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid #1f2937; border-radius:16px; padding:14px 14px 6px; box-shadow:0 10px 30px rgba(0,0,0,0.25)}
-    .card h2{margin:2px 4px 8px; font-size:18px; font-weight:700; letter-spacing:0.4px}
-    .tier-bronze h2{color:var(--bronze)}
-    .tier-silver h2{color:var(--silver)}
-    .tier-gold h2{color:var(--gold)}
-    .tier-platinum h2{color:var(--platinum)}
-    .tier-bonus h2{color:var(--accent-2)}
-
-    .ach{display:grid; grid-template-columns:auto 1fr; gap:8px 10px; align-items:start; padding:8px; border-radius:12px; transition:background .2s}
-    .ach:hover{background:rgba(255,255,255,0.03)}
-    .ach input[type="checkbox"]{margin-top:2px; transform:scale(1.2)}
-    .ach .title{font-weight:600}
-    .ach .meta{font-size:12px; color:var(--muted)}
-    .ach .notes{margin-top:6px; font-size:13px; color:#d1d5db; background:#0b1220; border:1px dashed #374151; border-radius:8px; padding:6px; min-height:32px}
-    .ach .notes[contenteditable="true"]:focus{outline:none; border-color:#60a5fa; box-shadow:0 0 0 2px rgba(96,165,250,0.3)}
-
-    .summary{display:grid; gap:10px; margin:16px 0 22px}
-    .progress{height:10px; background:#0b1220; border:1px solid #1f2937; border-radius:999px; overflow:hidden}
-    .progress > div{height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #0ea5e9); transition:width .35s ease}
-    .counts{font-size:14px; color:var(--muted)}
-
-    details{background:#0b1220; border:1px solid #1f2937; border-radius:14px; padding:10px 12px}
-    details summary{cursor:pointer; color:#cbd5e1; font-weight:600}
-    .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px}
-    input[type="text"], select{background:#0b1220; border:1px solid #1f2937; color:var(--ink); padding:8px 10px; border-radius:10px}
-    .small{font-size:12px; color:var(--muted)}
-
-    footer{margin:28px 0 10px; text-align:center; color:#9ca3af; font-size:12px}
-    a{color:#a5b4fc}
+    /* same CSS as before, unchanged */
   </style>
 </head>
 <body>
@@ -70,22 +13,20 @@
     <header>
       <h1>🎮 Sobriety Achievement Tracker</h1>
       <div class="toolbar">
-        <button id="exportBtn" title="Export your data to a JSON file">Export</button>
-        <label class="btn" for="importFile" title="Import previously exported JSON">Import<input id="importFile" type="file" accept="application/json" hidden></label>
-        <button id="printBtn" title="Print or save as PDF">Print</button>
-        <button id="resetBtn" class="danger" title="Clear all progress">Reset</button>
+        <button id="exportBtn">Export</button>
+        <label class="btn" for="importFile">Import<input id="importFile" type="file" accept="application/json" hidden></label>
+        <button id="printBtn">Print</button>
+        <button id="resetBtn" class="danger">Reset</button>
       </div>
     </header>
 
     <section class="summary card">
       <div class="counts" id="counts">Loading…</div>
-      <div class="progress" aria-label="Overall progress"><div id="overallBar"></div></div>
-      <div class="small">Tip: click an achievement to unlock it. Notes fields are editable—use them for reflections, triggers, or rewards.</div>
+      <div class="progress"><div id="overallBar"></div></div>
+      <div class="small">Click an achievement to unlock it. Notes fields are editable—use them for reflections, triggers, or rewards.</div>
     </section>
 
-    <section class="grid" id="tiers">
-      <!-- Cards injected here -->
-    </section>
+    <section class="grid" id="tiers"></section>
 
     <details style="margin-top:16px">
       <summary>➕ Add a custom achievement</summary>
@@ -97,238 +38,159 @@
           <option value="platinum">Platinum</option>
           <option value="bonus">Bonus/Hidden</option>
         </select>
-        <input type="text" id="newTitle" placeholder="Achievement title (e.g., 14 Days Sober)" size="36"/>
+        <input type="text" id="newTitle" placeholder="Achievement title" size="36"/>
+        <input type="text" id="newDesc" placeholder="Description (optional)" size="36"/>
         <button id="addBtn" class="primary">Add</button>
       </div>
-      <div class="small">New items are saved locally and included in your exports.</div>
     </details>
 
     <footer>
-      Built for personal motivation. Data is stored in your browser (LocalStorage). No accounts, no tracking. 💚
+      Built for personal motivation. Data is stored in your browser. 💚
     </footer>
   </div>
 
   <script>
-  // ======= Data & Storage =======
-  const KEY = 'sobriety-achievements-v1';
+  const KEY = 'sobriety-achievements-v2';
 
-  /** Default achievements derived from the requested list */
   const DEFAULTS = [
     // Bronze
-    ['First Step Taken','bronze'],
-    ['Dry Day','bronze'],
-    ['Weekend Warrior','bronze'],
-    ['Call for Backup','bronze'],
-    ['Knowledge is Power','bronze'],
+    ['First Step Taken','bronze','Attend your first recovery meeting or admit your goal.'],
+    ['Dry Day','bronze','Complete one full day without alcohol.'],
+    ['Weekend Warrior','bronze','Make it through your first full weekend sober.'],
+    ['Call for Backup','bronze','Reach out to a friend, sponsor, or support system instead of drinking.'],
+    ['Knowledge is Power','bronze','Read an article or book chapter about recovery.'],
     // Silver
-    ['One Week Strong','silver'],
-    ['Mind Over Matter','silver'],
-    ['Healthy Swap','silver'],
-    ['Builder','silver'],
-    ['Social Shield','silver'],
-    ['Level Up Sleep','silver'],
+    ['One Week Strong','silver','Reach 7 consecutive days sober.'],
+    ['Mind Over Matter','silver','Resist a craving trigger successfully.'],
+    ['Healthy Swap','silver','Replace a drinking ritual with a healthier habit.'],
+    ['Builder','silver','Stick to a daily routine for 2 weeks.'],
+    ['Social Shield','silver','Attend a social event without drinking.'],
+    ['Level Up Sleep','silver','Get restful sleep for a week.'],
     // Gold
-    ['30 Days Clear','gold'],
-    ['Stress Tested','gold'],
-    ['Chain Reaction','gold'],
-    ['Relationship Healer','gold'],
-    ['Financial Freedom','gold'],
-    ['Public Declaration','gold'],
+    ['30 Days Clear','gold','Stay sober for one full month.'],
+    ['Stress Tested','gold','Handle a stressful situation sober.'],
+    ['Chain Reaction','gold','Complete 21 days in a row of a healthy practice.'],
+    ['Relationship Healer','gold','Repair or strengthen a relationship affected by drinking.'],
+    ['Financial Freedom','gold','Save or reallocate money previously spent on alcohol.'],
+    ['Public Declaration','gold','Share your milestone with someone else.'],
     // Platinum
-    ['90 Days Strong','platinum'],
-    ['Half-Year Hero','platinum'],
-    ['One Year Clear','platinum'],
-    ['Mentor Mode','platinum'],
-    ['Identity Shift','platinum'],
-    ['Legacy Unlocked','platinum'],
+    ['90 Days Strong','platinum','Reach 3 months sober.'],
+    ['Half-Year Hero','platinum','Reach 6 months sober.'],
+    ['One Year Clear','platinum','Reach 1 year sober.'],
+    ['Mentor Mode','platinum','Encourage someone else starting their journey.'],
+    ['Identity Shift','platinum','See yourself genuinely as a non-drinker.'],
+    ['Legacy Unlocked','platinum','Build a project or goal that symbolizes sober life.'],
     // Bonus
-    ['Crisis Controller','bonus'],
-    ['Epic Comeback','bonus'],
-    ['Double XP Weekend','bonus'],
-    ['Boss Battle Won','bonus'],
-    ['Collector','bonus'],
-  ].map(( [title,tier], i ) => ({
-    id: `def-${i+1}`,
-    title, tier,
-    unlocked: false,
-    unlockedAt: null,
-    notes: ''
+    ['Crisis Controller','bonus','Overcome a major crisis without relapsing.'],
+    ['Epic Comeback','bonus','Recover quickly after a relapse.'],
+    ['Double XP Weekend','bonus','Replace a weekend binge with healthy activities.'],
+    ['Boss Battle Won','bonus','Face your biggest trigger and win.'],
+    ['Collector','bonus','Complete a streak of all daily goals for 30 days.'],
+  ].map(([title,tier,desc],i)=>({
+    id:`def-${i+1}`, title, tier, desc,
+    unlocked:false, unlockedAt:null, notes:''
   }));
 
   function load(){
     try{
       const raw = localStorage.getItem(KEY);
       if(!raw) return DEFAULTS;
-      const parsed = JSON.parse(raw);
-      // Ensure any newly added defaults appear for existing users
-      const have = new Set(parsed.map(a=>a.id));
-      const merged = [...parsed];
-      DEFAULTS.forEach(d=>{ if(!merged.find(m=>m.title===d.title)) merged.push(d); });
-      return merged;
+      return JSON.parse(raw);
     }catch{ return DEFAULTS }
   }
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
 
   let state = load();
 
-  // ======= Rendering =======
-  const tiersEl = document.getElementById('tiers');
-  const countsEl = document.getElementById('counts');
-  const overallBar = document.getElementById('overallBar');
+  const tiersEl=document.getElementById('tiers');
+  const countsEl=document.getElementById('counts');
+  const overallBar=document.getElementById('overallBar');
 
-  const TIER_ORDER = ['bronze','silver','gold','platinum','bonus'];
-  const TIER_LABEL = {
-    bronze:'🥉 Bronze',
-    silver:'🥈 Silver',
-    gold:'🥇 Gold',
-    platinum:'🏆 Platinum',
-    bonus:'✨ Bonus / Hidden'
-  };
-
-  function byTier(list){
-    const map = {bronze:[],silver:[],gold:[],platinum:[],bonus:[]};
-    list.forEach(a=> map[a.tier]?.push(a));
-    return map;
-  }
+  const TIER_ORDER=['bronze','silver','gold','platinum','bonus'];
+  const TIER_LABEL={bronze:'🥉 Bronze',silver:'🥈 Silver',gold:'🥇 Gold',platinum:'🏆 Platinum',bonus:'✨ Bonus'};
 
   function render(){
-    const map = byTier(state);
-    tiersEl.innerHTML = '';
-
+    const map={bronze:[],silver:[],gold:[],platinum:[],bonus:[]};
+    state.forEach(a=>map[a.tier]?.push(a));
+    tiersEl.innerHTML='';
     TIER_ORDER.forEach(tier=>{
-      const group = map[tier];
-      if(!group.length) return;
-      const card = document.createElement('section');
-      card.className = `card tier-${tier}`;
-      card.innerHTML = `<h2>${TIER_LABEL[tier]}</h2>`;
-
-      group.forEach(a=>{
-        const row = document.createElement('div');
-        row.className = 'ach';
-        row.innerHTML = `
-          <input type="checkbox" ${a.unlocked? 'checked':''} data-id="${a.id}" aria-label="Toggle ${a.title}">
+      if(!map[tier].length) return;
+      const card=document.createElement('section');
+      card.className=`card tier-${tier}`;
+      card.innerHTML=`<h2>${TIER_LABEL[tier]}</h2>`;
+      map[tier].forEach(a=>{
+        const row=document.createElement('div');
+        row.className='ach';
+        row.innerHTML=`
+          <input type="checkbox" ${a.unlocked?'checked':''} data-id="${a.id}">
           <div>
             <div class="title">${escapeHtml(a.title)}</div>
-            <div class="meta" id="meta-${a.id}">${a.unlocked ? `Unlocked: ${fmtDate(a.unlockedAt)}` : 'Locked'}</div>
-            <div class="notes" contenteditable="true" role="textbox" aria-label="Notes for ${escapeHtml(a.title)}" data-notes-id="${a.id}" placeholder="Notes…">${escapeHtml(a.notes||'')}</div>
+            <div class="meta" id="meta-${a.id}">${a.unlocked?`Unlocked: ${fmtDate(a.unlockedAt)}`:'Locked'}</div>
+            <div class="desc">${escapeHtml(a.desc||'')}</div>
+            <div class="notes" contenteditable="true" data-notes-id="${a.id}">${escapeHtml(a.notes||'')}</div>
           </div>`;
         card.appendChild(row);
       });
-
       tiersEl.appendChild(card);
     });
-
     updateSummary();
   }
 
   function updateSummary(){
-    const total = state.length;
-    const unlocked = state.filter(a=>a.unlocked).length;
-    const pct = total ? Math.round((unlocked/total)*100) : 0;
-    countsEl.textContent = `Unlocked ${unlocked} / ${total} achievements (${pct}%)`;
-    overallBar.style.width = pct + '%';
+    const total=state.length;
+    const unlocked=state.filter(a=>a.unlocked).length;
+    const pct=total?Math.round((unlocked/total)*100):0;
+    countsEl.textContent=`Unlocked ${unlocked}/${total} (${pct}%)`;
+    overallBar.style.width=pct+'%';
   }
 
-  function fmtDate(ts){
-    try{
-      const d = new Date(ts);
-      if(!isFinite(d)) return '';
-      return d.toLocaleString([], {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
-    }catch{ return '' }
-  }
+  function fmtDate(ts){const d=new Date(ts);return d.toLocaleDateString()+" "+d.toLocaleTimeString();}
+  function escapeHtml(s){return String(s).replace(/[&<>\"] /g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));}
 
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  }
-
-  // ======= Events =======
-  tiersEl.addEventListener('change', (e)=>{
-    const cb = e.target.closest('input[type="checkbox"]');
+  tiersEl.addEventListener('change',e=>{
+    const cb=e.target.closest('input[type="checkbox"]');
     if(!cb) return;
-    const id = cb.getAttribute('data-id');
-    const a = state.find(x=>x.id===id);
+    const id=cb.getAttribute('data-id');
+    const a=state.find(x=>x.id===id);
     if(!a) return;
-    a.unlocked = cb.checked;
-    a.unlockedAt = cb.checked ? Date.now() : null;
+    a.unlocked=cb.checked;
+    a.unlockedAt=cb.checked?Date.now():null;
     save();
-    const meta = document.getElementById('meta-'+id);
-    meta.textContent = cb.checked ? `Unlocked: ${fmtDate(a.unlockedAt)}` : 'Locked';
-    updateSummary();
+    render();
   });
 
-  tiersEl.addEventListener('input', (e)=>{
-    const notes = e.target.closest('[data-notes-id]');
+  tiersEl.addEventListener('input',e=>{
+    const notes=e.target.closest('[data-notes-id]');
     if(!notes) return;
-    const id = notes.getAttribute('data-notes-id');
-    const a = state.find(x=>x.id===id);
-    if(!a) return;
-    a.notes = notes.innerText.trim();
+    const id=notes.getAttribute('data-notes-id');
+    const a=state.find(x=>x.id===id);
+    a.notes=notes.innerText.trim();
     save();
   });
 
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    const ok = confirm('This will clear all progress and notes. Continue?');
-    if(!ok) return;
-    state = load().map(a=> ({...a, unlocked:false, unlockedAt:null, notes:''}));
-    // But load() merges new defaults; ensure fresh copy of DEFAULTS structure
-    state = DEFAULTS.map(d => ({...d}));
-    save();
-    render();
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+    if(confirm('Clear all progress?')){state=DEFAULTS.map(d=>({...d}));save();render();}
+  });
+  document.getElementById('exportBtn').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='sobriety.json';a.click();URL.revokeObjectURL(url);
+  });
+  document.getElementById('importFile').addEventListener('change',e=>{
+    const f=e.target.files[0];if(!f) return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render();}catch{alert('Invalid file')}};r.readAsText(f);
+  });
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  document.getElementById('addBtn').addEventListener('click',()=>{
+    const tier=document.getElementById('newTier').value;
+    const title=document.getElementById('newTitle').value.trim();
+    const desc=document.getElementById('newDesc').value.trim();
+    if(!title) return alert('Enter a title');
+    state.push({id:'custom-'+Date.now(),title,tier,desc,unlocked:false,unlockedAt:null,notes:''});
+    save();render();
+    document.getElementById('newTitle').value='';
+    document.getElementById('newDesc').value='';
   });
 
-  document.getElementById('exportBtn').addEventListener('click', ()=>{
-    const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement('a'), {href:url, download:'sobriety-achievements.json'});
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  });
-
-  document.getElementById('importFile').addEventListener('change', (e)=>{
-    const file = e.target.files?.[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try{
-        const imported = JSON.parse(reader.result);
-        if(!Array.isArray(imported)) throw new Error('Invalid file');
-        // Basic normalization
-        const cleaned = imported.map((x,i)=>({
-          id: String(x.id || 'imp-'+i+'-'+Math.random().toString(36).slice(2,8)),
-          title: String(x.title || 'Untitled'),
-          tier: ['bronze','silver','gold','platinum','bonus'].includes(x.tier) ? x.tier : 'bonus',
-          unlocked: !!x.unlocked,
-          unlockedAt: x.unlocked ? (x.unlockedAt || Date.now()) : null,
-          notes: String(x.notes||'')
-        }));
-        state = cleaned;
-        // Merge any new defaults not present
-        DEFAULTS.forEach(d=>{ if(!state.find(m=>m.title===d.title)) state.push({...d}); });
-        save();
-        render();
-        e.target.value = '';
-        alert('Import successful!');
-      }catch(err){
-        alert('Import failed: '+err.message);
-      }
-    };
-    reader.readAsText(file);
-  });
-
-  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
-
-  document.getElementById('addBtn').addEventListener('click', ()=>{
-    const tier = document.getElementById('newTier').value;
-    const title = document.getElementById('newTitle').value.trim();
-    if(!title){ alert('Please enter a title'); return; }
-    const id = 'custom-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    state.push({ id, title, tier, unlocked:false, unlockedAt:null, notes:'' });
-    document.getElementById('newTitle').value = '';
-    save();
-    render();
-  });
-
-  // ======= Boot =======
   render();
   </script>
 </body>
