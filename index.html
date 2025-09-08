@@ -6,20 +6,11 @@
   <title>Sobriety Achievement Tracker</title>
   <style>
     :root{
-      --bg:#0f172a;
-      --card:#111827;
-      --ink:#e5e7eb;
-      --muted:#9ca3af;
-      --accent:#22c55e;
-      --accent-2:#6366f1;
-      --warning:#ef4444;
-      --gold:#f59e0b;
-      --silver:#9ca3af;
-      --bronze:#b45309;
-      --platinum:#60a5fa;
+      --bg:#0f172a; --card:#111827; --ink:#e5e7eb; --muted:#9ca3af;
+      --accent:#22c55e; --accent-2:#6366f1; --gold:#f59e0b; --silver:#9ca3af;
+      --bronze:#b45309; --platinum:#60a5fa;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    *{box-sizing:border-box} html,body{height:100%}
     body{margin:0;font:16px/1.4 system-ui;background:linear-gradient(180deg,#0b1220,var(--bg));color:var(--ink)}
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
     header{display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;margin-bottom:12px}
@@ -30,31 +21,34 @@
     button.primary{background:linear-gradient(135deg,#0ea5e9,#22c55e);border:none;color:white}
     button.danger{background:#1f2937;border-color:#ef4444;color:#fecaca}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-    .card{background:rgba(255,255,255,0.02);border:1px solid #1f2937;border-radius:16px;padding:14px 14px 6px;box-shadow:0 10px 30px rgba(0,0,0,0.25)}
-    .card h2{margin:2px 4px 8px;font-size:18px;font-weight:700}
-    .tier-bronze h2{color:var(--bronze)}
-    .tier-silver h2{color:var(--silver)}
-    .tier-gold h2{color:var(--gold)}
-    .tier-platinum h2{color:var(--platinum)}
+    .card{background:rgba(255,255,255,.02);border:1px solid #1f2937;border-radius:16px;padding:14px 14px 6px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .card h2{margin:2px 4px 8px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+    .tier-bronze h2{color:var(--bronze)} .tier-silver h2{color:var(--silver)}
+    .tier-gold h2{color:var(--gold)} .tier-platinum h2{color:var(--platinum)}
     .tier-bonus h2{color:var(--accent-2)}
     .ach{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start;padding:8px;border-radius:12px;transition:background .2s}
-    .ach:hover{background:rgba(255,255,255,0.03)}
-    .ach input[type="checkbox"]{margin-top:2px;transform:scale(1.2)}
+    .ach:hover{background:rgba(255,255,255,.03)}
+    .ach input[type=checkbox]{margin-top:2px;transform:scale(1.2)}
     .ach .title{font-weight:600}
     .ach .meta{font-size:12px;color:var(--muted)}
     .ach .desc{font-size:13px;color:#cbd5e1;margin-top:2px}
     .ach .notes{margin-top:6px;font-size:13px;color:#d1d5db;background:#0b1220;border:1px dashed #374151;border-radius:8px;padding:6px;min-height:32px}
-    .ach .notes[contenteditable="true"]:focus{outline:none;border-color:#60a5fa;box-shadow:0 0 0 2px rgba(96,165,250,0.3)}
+    .ach .notes[contenteditable=true]:focus{outline:none;border-color:#60a5fa;box-shadow:0 0 0 2px rgba(96,165,250,.3)}
     .summary{display:grid;gap:10px;margin:16px 0 22px}
     .progress{height:10px;background:#0b1220;border:1px solid #1f2937;border-radius:999px;overflow:hidden}
-    .progress > div{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#0ea5e9);transition:width .35s ease}
+    .progress>div{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#0ea5e9);transition:width .35s ease}
     .counts{font-size:14px;color:var(--muted)}
     details{background:#0b1220;border:1px solid #1f2937;border-radius:14px;padding:10px 12px}
     details summary{cursor:pointer;color:#cbd5e1;font-weight:600}
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
-    input[type="text"],select{background:#0b1220;border:1px solid #1f2937;color:var(--ink);padding:8px 10px;border-radius:10px}
+    input[type=text],select{background:#0b1220;border:1px solid #1f2937;color:var(--ink);padding:8px 10px;border-radius:10px}
     .small{font-size:12px;color:var(--muted)}
     footer{margin:28px 0 10px;text-align:center;color:#9ca3af;font-size:12px}
+    .icon{font-size:20px}
+    .ach.just-unlocked{position:relative;animation:glow 1.2s ease-out}
+    .ach.just-unlocked::after{content:'✔';position:absolute;left:-8px;top:-8px;font-size:22px;opacity:0;animation:pop .6s ease-out forwards}
+    @keyframes pop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
+    @keyframes glow{0%{box-shadow:0 0 0 rgba(34,197,94,0)}50%{box-shadow:0 0 24px rgba(34,197,94,.55)}100%{box-shadow:0 0 0 rgba(34,197,94,0)}}
   </style>
 </head>
 <body>
@@ -70,7 +64,7 @@
     </header>
     <section class="summary card">
       <div class="counts" id="counts">Loading…</div>
-      <div class="progress"><div id="overallBar"></div></div>
+      <div class="progress" aria-label="Overall progress"><div id="overallBar"></div></div>
       <div class="small">Click an achievement to unlock it. Notes fields are editable—use them for reflections, triggers, or rewards.</div>
     </section>
     <section class="grid" id="tiers"></section>
@@ -84,8 +78,8 @@
           <option value="platinum">Platinum</option>
           <option value="bonus">Bonus/Hidden</option>
         </select>
-        <input type="text" id="newTitle" placeholder="Achievement title" size="30"/>
-        <input type="text" id="newDesc" placeholder="Description (optional)" size="40"/>
+        <input type="text" id="newTitle" placeholder="Achievement title" size="28">
+        <input type="text" id="newDesc" placeholder="Description (optional)" size="42">
         <button id="addBtn" class="primary">Add</button>
       </div>
     </details>
@@ -121,24 +115,47 @@
       ['Epic Comeback','bonus','Recover quickly after a relapse.'],
       ['Double XP Weekend','bonus','Replace a weekend binge with healthy activities.'],
       ['Boss Battle Won','bonus','Face your biggest trigger and win.'],
-      ['Collector','bonus','Complete a streak of all daily goals for 30 days.']
+      ['Collector','bonus','Complete a streak of all daily goals for 30 days.'],
+      ['Pocket Guardian','bronze','Carry a personal breathalyzer for the first time.'],
+      ['First Check Passed','bronze','Pass your first random breathalyzer test.'],
+      ['Daily Log','bronze','Record alcohol-free results 3 days in a row.'],
+      ['Safe Choice','bronze','Decline an offered drink without hesitation.'],
+      ['Consistency Counts','silver','Pass random breathalyzer checks for 7 days straight.'],
+      ['Trigger Dodger','silver','Leave a situation where alcohol was tempting.'],
+      ['Checkmate','silver','Take and log 20 self-initiated breathalyzer tests.'],
+      ['Fitness Bonus','silver','Choose exercise instead of drinking on 5 separate days.'],
+      ['30 Clean Screens','gold','Pass 30 breathalyzer checks in a row.'],
+      ['Night Out, Clear Mind','gold','Enjoy a night out and log a clean check during/after.'],
+      ['Routine Mastery','gold','Integrate daily or random testing for 30 consecutive days.'],
+      ['Guardian Angel','gold','Share results with an accountability partner for 2 weeks.'],
+      ['100 Clean Checks','platinum','Pass 100 breathalyzer checks.'],
+      ['Bulletproof Routine','platinum','Maintain 3 months of regular checks without a fail.'],
+      ['Community Anchor','platinum','Encourage someone else to adopt testing in recovery.'],
+      ['Beyond the Breath','platinum','Feel checks are reassurance, not fear, due to consistency.'],
+      ['Boss Mode Activated','bonus','Pass a check in a high-stress moment (work/family tension).'],
+      ['Comeback Stronger','bonus','Fail once, then pass the next 10 checks.'],
+      ['Unexpected Victory','bonus','Get tested while traveling or off-routine — and pass.'],
+      ['Perfect Streak','bonus','Achieve 60 consecutive clean breathalyzer checks.'],
+      ['Iron Will','bonus','Immediately test after temptation and log a clean result.']
     ].map(([title,tier,desc],i)=>({id:`def-${i+1}`,title,tier,desc,unlocked:false,unlockedAt:null,notes:''}));
-    function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return DEFAULTS;return JSON.parse(raw)}catch{return DEFAULTS}}
+    function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return DEFAULTS;const parsed=JSON.parse(raw);const titles=new Set(parsed.map(a=>a.title));DEFAULTS.forEach(d=>{if(!titles.has(d.title))parsed.push({...d})});return parsed}catch{return DEFAULTS}}
     function save(){localStorage.setItem(KEY,JSON.stringify(state))}
     let state=load();
     const tiersEl=document.getElementById('tiers');const countsEl=document.getElementById('counts');const overallBar=document.getElementById('overallBar');
-    const TIER_ORDER=['bronze','silver','gold','platinum','bonus'];const TIER_LABEL={bronze:'🥉 Bronze',silver:'🥈 Silver',gold:'🥇 Gold',platinum:'🏆 Platinum',bonus:'✨ Bonus'};
-    function render(){const map={bronze:[],silver:[],gold:[],platinum:[],bonus:[]};state.forEach(a=>map[a.tier]?.push(a));tiersEl.innerHTML='';TIER_ORDER.forEach(tier=>{if(!map[tier].length)return;const card=document.createElement('section');card.className=`card tier-${tier}`;card.innerHTML=`<h2>${TIER_LABEL[tier]}</h2>`;map[tier].forEach(a=>{const row=document.createElement('div');row.className='ach';row.innerHTML=`<input type="checkbox" ${a.unlocked?'checked':''} data-id="${a.id}"><div><div class="title">${escapeHtml(a.title)}</div><div class="meta" id="meta-${a.id}">${a.unlocked?`Unlocked: ${fmtDate(a.unlockedAt)}`:'Locked'}</div><div class="desc">${escapeHtml(a.desc||'')}</div><div class="notes" contenteditable="true" data-notes-id="${a.id}">${escapeHtml(a.notes||'')}</div></div>`;card.appendChild(row)});tiersEl.appendChild(card)});updateSummary()}
+    const TIER_ORDER=['bronze','silver','gold','platinum','bonus'];const TIER_LABEL={bronze:'<span class="icon">🥉</span> Bronze',silver:'<span class="icon">🥈</span> Silver',gold:'<span class="icon">🥇</span> Gold',platinum:'<span class="icon">🏆</span> Platinum',bonus:'<span class="icon">✨</span> Bonus / Hidden'};
+    function render(){const map={bronze:[],silver:[],gold:[],platinum:[],bonus:[]};state.forEach(a=>map[a.tier]?.push(a));tiersEl.innerHTML='';TIER_ORDER.forEach(tier=>{if(!map[tier].length)return;const card=document.createElement('section');card.className=`card tier-${tier}`;card.innerHTML=`<h2>${TIER_LABEL[tier]}</h2>`;map[tier].forEach(a=>{const row=document.createElement('div');row.className='ach';row.innerHTML=`<input type="checkbox" ${a.unlocked?'checked':''} data-id="${a.id}" aria-label="Toggle ${a.title}"><div><div class="title">${escapeHtml(a.title)}</div><div class="meta" id="meta-${a.id}">${a.unlocked?`Unlocked: ${fmtDate(a.unlockedAt)}`:'Locked'}</div><div class="desc">${escapeHtml(a.desc||'')}</div><div class="notes" contenteditable="true" role="textbox" aria-label="Notes for ${escapeHtml(a.title)}" data-notes-id="${a.id}">${escapeHtml(a.notes||'')}</div></div>`;card.appendChild(row)});tiersEl.appendChild(card)});updateSummary()}
     function updateSummary(){const total=state.length;const unlocked=state.filter(a=>a.unlocked).length;const pct=total?Math.round((unlocked/total)*100):0;countsEl.textContent=`Unlocked ${unlocked}/${total} (${pct}%)`;overallBar.style.width=pct+'%'}
-    function fmtDate(ts){const d=new Date(ts);return d.toLocaleDateString()+" "+d.toLocaleTimeString()}
+    function fmtDate(ts){try{const d=new Date(ts);return d.toLocaleString([],{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'})}catch{return ''}}
     function escapeHtml(s){return String(s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
-    tiersEl.addEventListener('change',e=>{const cb=e.target.closest('input[type="checkbox"]');if(!cb)return;const id=cb.getAttribute('data-id');const a=state.find(x=>x.id===id);a.unlocked=cb.checked;a.unlockedAt=cb.checked?Date.now():null;save();render()});
-    tiersEl.addEventListener('input',e=>{const notes=e.target.closest('[data-notes-id]');if(!notes)return;const id=notes.getAttribute('data-notes-id');const a=state.find(x=>x.id===id);a.notes=notes.innerText.trim();save()});
-    document.getElementById('resetBtn').addEventListener('click',()=>{if(confirm('Clear all progress?')){state=DEFAULTS.map(d=>({...d}));save();render()}});
-    document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sobriety.json';a.click();URL.revokeObjectURL(url)});
-    document.getElementById('importFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);save();render()}catch{alert('Invalid file')}};r.readAsText(f)});
+    tiersEl.addEventListener('change',e=>{const cb=e.target.closest('input[type="checkbox"]');if(!cb)return;const id=cb.getAttribute('data-id');const a=state.find(x=>x.id===id);if(!a)return;a.unlocked=cb.checked;a.unlockedAt=cb.checked?Date.now():null;save();const meta=document.getElementById('meta-'+id);meta.textContent=cb.checked?`Unlocked: ${fmtDate(a.unlockedAt)}`:'Locked';updateSummary()});
+    tiersEl.addEventListener('input',e=>{const notes=e.target.closest('[data-notes-id]');if(!notes)return;const id=notes.getAttribute('data-notes-id');const a=state.find(x=>x.id===id);if(!a)return;a.notes=notes.innerText.trim();save()});
+    document.getElementById('resetBtn').addEventListener('click',()=>{if(!confirm('This will clear all progress and notes. Continue?'))return;state=DEFAULTS.map(d=>({...d}));save();render()});
+    document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='sobriety-achievements.json';a.click();URL.revokeObjectURL(url)});
+    document.getElementById('importFile').addEventListener('change',e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const imported=JSON.parse(reader.result);if(!Array.isArray(imported))throw new Error('Invalid file');state=imported;const titles=new Set(state.map(a=>a.title));DEFAULTS.forEach(d=>{if(!titles.has(d.title))state.push({...d})});save();render();alert('Import successful!')}catch(err){alert('Import failed: '+err.message)}};reader.readAsText(file)});
     document.getElementById('printBtn').addEventListener('click',()=>window.print());
-    document.getElementById('addBtn').addEventListener('click',()=>{const tier=document.getElementById('newTier').value;const title=document.getElementById('newTitle').value.trim();const desc=document.getElementById('newDesc').value.trim();if(!title)return alert('Enter a title');state.push({id:'custom-'+Date.now(),title,tier,desc,unlocked:false,unlockedAt:null,notes:''});save();render();document.getElementById('newTitle').value='';document.getElementById('newDesc').value=''});
+    document.getElementById('addBtn').addEventListener('click',()=>{const tier=document.getElementById('newTier').value;const title=document.getElementById('newTitle').value.trim();const desc=document.getElementById('newDesc').value.trim();if(!title)return alert('Please enter a title');state.push({id:'custom-'+Date.now().toString(36),title,tier,desc,unlocked:false,unlockedAt:null,notes:''});save();render();document.getElementById('newTitle').value='';document.getElementById('newDesc').value=''});
+    // Animation-only secondary listener
+    tiersEl.addEventListener('change', e=>{const cb=e.target.closest('input[type="checkbox"]');if(!cb)return;const row=cb.closest('.ach');if(!row)return;row.classList.remove('just-unlocked');void row.offsetWidth;if(cb.checked){row.classList.add('just-unlocked');setTimeout(()=>row.classList.remove('just-unlocked'),1200)}});
     render();
   </script>
 </body>
